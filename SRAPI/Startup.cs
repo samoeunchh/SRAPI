@@ -31,7 +31,7 @@ namespace SRAPI
             var ConnString = "Server=.;Database=SRProjectAPI;User Id=sa;Password=123;MultipleActiveResultSets=true";
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(ConnString));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SRAPI", Version = "v1" });
@@ -49,7 +49,7 @@ namespace SRAPI
             }
 
             app.UseHttpsRedirection();
-
+           
             app.UseRouting();
 
             app.UseAuthorization();
