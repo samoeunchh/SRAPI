@@ -9,20 +9,29 @@ namespace PresentationLayer
 {
     class Program
     {
-        static void Main(string[] args)
+        static HttpClient client = new HttpClient();
+        static async void Main(string[] args)
         {
-            //Console.WriteLine("Hello World!");
+            client.BaseAddress = new Uri("http://localhost:49986/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+            //Call Post Data
+            var brand = new Brand
+            {
+                BrandName = "Lexus",
+                Description="Testing"
+            };
+            if (await PostBrandAsync(brand))
+            {
+                Console.WriteLine("Data Saved");
+            }
+            //Call Get Data
             CallWebApiAsync().Wait();
             Console.ReadLine();
         }
         static async Task CallWebApiAsync()
         {
-            using(var client=new HttpClient())
-            {
-                client.BaseAddress = new Uri("http://localhost:49986/");
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
                 //GET Method
                 HttpResponseMessage response = await client.GetAsync("api/Brands");
                 if (response.IsSuccessStatusCode)
@@ -40,8 +49,19 @@ namespace PresentationLayer
                 {
                     Console.WriteLine("Something wrong!");
                 }
-            }
 
+        }
+        static async Task<bool> PostBrandAsync(Brand brand)
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/Brands",brand);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
