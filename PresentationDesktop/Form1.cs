@@ -67,5 +67,34 @@ namespace PresentationDesktop
                 MessageBox.Show(errorMessage);
             }
         }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                string message = "Do you want to delete?";
+                string title = "Close Window";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result = MessageBox.Show(message, title, buttons);
+                if (result == DialogResult.Yes)
+                {
+                    var id = listView1.SelectedItems[0].Text;
+                    HttpResponseMessage response = await client.DeleteAsync("api/Brands/"+ id);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Delete sucess");
+                        Form1_Load(sender,e);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Delete Failed");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select an item for deleting");
+            }
+        }
     }
 }
