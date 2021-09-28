@@ -77,6 +77,7 @@ namespace SRAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Brand>> PostBrand(Brand brand)
         {
+            if (await IsBrandNameExist(brand.BrandName)) return BadRequest("This brand name is already exist");
             _context.Brand.Add(brand);
             await _context.SaveChangesAsync();
 
@@ -98,7 +99,8 @@ namespace SRAPI.Controllers
 
             return NoContent();
         }
-
+        private async Task<bool> IsBrandNameExist(string name) 
+            => await _context.Brand.AnyAsync(x => x.BrandName.Equals(name));
         private bool BrandExists(Guid id)
         {
             return _context.Brand.Any(e => e.BrandId == id);

@@ -9,8 +9,8 @@ namespace PresentationLayer
 {
     class Program
     {
-        static HttpClient client = new HttpClient();
-        static async void Main(string[] args)
+        static readonly HttpClient client = new();
+        static void Main(string[] args)
         {
             client.BaseAddress = new Uri("http://localhost:49986/");
             client.DefaultRequestHeaders.Accept.Clear();
@@ -22,10 +22,7 @@ namespace PresentationLayer
                 BrandName = "Lexus",
                 Description="Testing"
             };
-            if (await PostBrandAsync(brand))
-            {
-                Console.WriteLine("Data Saved");
-            }
+            PostBrandAsync(brand).Wait();
             //Call Get Data
             CallWebApiAsync().Wait();
             Console.ReadLine();
